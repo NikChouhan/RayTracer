@@ -4,29 +4,33 @@
 
 #include <fstream>
 
-bool hit_sphere(const ray& r, const point3 centre, double radius)
+double hit_sphere(const ray& r, const point3 centre, double radius)
 {
 	vec3 oc = r.origin() - centre;
-	auto a = dot(r.direction(), r.direction());
-	auto b = 2.0 * dot(r.direction(), oc);
-	auto c = dot(oc, oc) - radius * radius;
+	double a = dot(r.direction(), r.direction());
+	double b = 2.0 * dot(r.direction(), oc);
+	double c = dot(oc, oc) - radius * radius;
 
-	if ((b*b - 4*a*c) > 0)
-		return true;
-	return false;
+	auto disc = (b * b - 4 * a * c);
+	if (disc> 0)
+		return ((-b - sqrt(disc)) / 2.0 * a);
+	return -1.0;
 }
 
 
 
 color ray_color(const ray& r)
 {
-	if (hit_sphere(r, point3(0, 0, -1), 0.3))
+
+	auto t = hit_sphere(r, point3(0, 0, -1), 0.8);
+	if (t > 0)
 	{
-		return color(1.0, 0, 0);
+		vec3 unit = unit_vector(r.at(t) - vec3(0, 0, -1));
+		return 0.5 * color(unit.x() + 1, unit.y() + 1, unit.z() + 1);
 	}
 
 	auto u_dir = unit_vector(r.direction());
-	auto t = 0.5 * (u_dir.y() + 1.0);
+	t = 0.5 * (u_dir.y() + 1.0);
 	color pixel_color = (1 - t) * color(1.0, 1.0, 1.0) + (t)*color(0.5, 0.7, 1.0);
 	return pixel_color;
 }
