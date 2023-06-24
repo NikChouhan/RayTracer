@@ -25,8 +25,8 @@ color ray_color(const ray& r)
 	auto t = hit_sphere(r, point3(0, 0, -1), 0.8);
 	if (t > 0)
 	{
-		vec3 unit = unit_vector(r.at(t) - vec3(0, 0, -1));
-		return 0.5 * color(unit.x() + 1, unit.y() + 1, unit.z() + 1);
+		vec3 unit = unit_vector(r.at(t) - vec3(0, 0, -1));		//unit vector corresponding to the vector joining the hit point and origin
+		return color(unit.x() , unit.y() , unit.z());			//colour mapping based on normal direction
 	}
 
 	auto u_dir = unit_vector(r.direction());
